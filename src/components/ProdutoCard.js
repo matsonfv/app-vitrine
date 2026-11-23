@@ -1,30 +1,22 @@
-// Arquivo: src/components/CursoCard.js
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-// Componente reutilizável que recebe o objeto 'curso' e a função 'onVerDetalhes'
-export default function CursoCard({ curso, onVerDetalhes }) {
+export default function ProdutoCard({ item, onPress }) {
   return (
-    <TouchableOpacity
-      style={styles.card}
-      activeOpacity={0.8}
-      onPress={onVerDetalhes}
-    >
-      <View style={styles.linhaTags}>
-        <View style={styles.tagCategoria}>
-          <Text style={styles.tagCategoriaTexto}>{curso.categoria}</Text>
-        </View>
-        <Text style={styles.cargaHoraria}>{curso.cargaHoraria} • {curso.nivel}</Text>
-      </View>
-
-      <Text style={styles.titulo}>{curso.titulo}</Text>
-      <Text style={styles.descricao} numberOfLines={2}>
-        {curso.descricao}
-      </Text>
-
-      <View style={styles.rodape}>
-        <Text style={styles.instrutor}>{curso.instrutor}</Text>
-        <Text style={styles.linkDetalhes}>Ver detalhes →</Text>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+      <Image source={{ uri: item.image }} style={styles.imagem} resizeMode="contain" />
+      <View style={styles.conteudo}>
+        <Text style={styles.categoria}>{item.category}</Text>
+        <Text style={styles.titulo} numberOfLines={2}>
+          {item.title}
+        </Text>
+        <Text style={styles.preco}>R$ {item.price.toFixed(2)}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -32,9 +24,10 @@ export default function CursoCard({ curso, onVerDetalhes }) {
 
 const styles = StyleSheet.create({
   card: {
+    flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: 12,
+    padding: 12,
     marginBottom: 14,
     borderWidth: 1,
     borderColor: '#E2E8F0',
@@ -44,56 +37,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 4,
   },
-  linhaTags: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
+  imagem: {
+    width: 100,
+    height: 120,
+    marginRight: 14,
   },
-  tagCategoria: {
-    backgroundColor: '#EFF6FF',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
+  conteudo: {
+    flex: 1,
+    justifyContent: 'center',
   },
-  tagCategoriaTexto: {
-    color: '#1D4ED8',
-    fontWeight: 'bold',
+  categoria: {
+    color: '#2563EB',
     fontSize: 12,
-  },
-  cargaHoraria: {
-    fontSize: 12,
-    color: '#64748B',
-    fontWeight: '600',
-  },
-  titulo: {
-    fontSize: 17,
     fontWeight: 'bold',
-    color: '#0F172A',
     marginBottom: 6,
   },
-  descricao: {
-    fontSize: 13,
-    color: '#475569',
-    lineHeight: 19,
-    marginBottom: 12,
+  titulo: {
+    color: '#0F172A',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  rodape: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#E2E8F0',
-  },
-  instrutor: {
-    fontSize: 12,
-    color: '#334155',
-    fontWeight: '600',
-  },
-  linkDetalhes: {
-    fontSize: 13,
-    color: '#2563EB',
+  preco: {
+    color: '#059669',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

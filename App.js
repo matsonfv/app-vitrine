@@ -3,8 +3,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import CatalogoScreen from './src/screens/VitrineScreen';
-import DetalhesCursoScreen from './src/screens/DetalhesProdutoScreen';
+import VitrineScreen from './src/screens/VitrineScreen';
+import DetalhesProdutoScreen from './src/screens/DetalhesProdutoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +12,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Catalogo"
+        initialRouteName="Vitrine"
         screenOptions={{
           headerStyle: { backgroundColor: '#0F172A' },
           headerTintColor: '#FFFFFF',
@@ -20,14 +20,14 @@ export default function App() {
         }}
       >
         <Stack.Screen
-          name="Catalogo"
-          component={CatalogoScreen}
-          options={{ title: 'Catálogo de Cursos' }}
+          name="Vitrine"
+          component={VitrineScreen}
+          options={{ title: 'Vitrine de Produtos' }}
         />
         <Stack.Screen
-          name="Detalhes"
-          component={DetalhesCursoScreen}
-          options={{ title: 'Detalhes do Curso' }}
+          name="DetalhesProduto"
+          component={DetalhesProdutoScreen}
+          options={{ title: 'Detalhes do Produto' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

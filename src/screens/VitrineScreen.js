@@ -1,49 +1,87 @@
-// Arquivo: src/screens/CatalogoScreen.js
-import React, { useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-import { CATEGORIAS, LISTA_CURSOS } from '../data/cursos';
-import FiltroCategoria from '../components/FiltroCategoria';
-import CursoCard from '../components/ProdutoCard';
+import ProdutoCard from '../components/ProdutoCard';
 
-export default function CatalogoScreen({ navigation }) {
-  const [categoriaAtiva, setCategoriaAtiva] = useState('Todos');
+const API_URL = 'https://fakestoreapi.com/products?limit=10';
 
-  const cursosFiltrados =
-    categoriaAtiva === 'Todos'
-      ? LISTA_CURSOS
-      : LISTA_CURSOS.filter((curso) => curso.categoria === categoriaAtiva);
+export default function VitrineScreen({ navigation }) {
+  const [produtos, setProdutos] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
+
+  useEffect(() => {
+    async function buscarProdutos() {
+      try {
+        const resposta = await fetch(API_URL);
+
+        if (!resposta.ok) {
+          throw new Error(`Erro ao buscar produtos: ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+        setProdutos(dados);
+      } catch (error) {
+        console.error('Não foi possível carregar os produtos.', error);
+        setErro('Não foi possível carregar os produtos.');
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    buscarProdutos();
+  }, []);
+
+  if (carregando) {
+    return (
+      <View style={styles.estado}>
+        <ActivityIndicator size="large" color="#2563EB" />
+      </View>
+    );
+  }
+
+  if (erro) {
+    return (
+      <View style={styles.estado}>
+        <Text style={styles.erro}>{erro}</Text>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.tela}>
-      <FiltroCategoria
-        categorias={CATEGORIAS}
-        ativa={categoriaAtiva}
-        aoSelecionar={setCategoriaAtiva}
-      />
-
-      <FlatList
-        data={cursosFiltrados}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.lista}
-        renderItem={({ item }) => (
-          <CursoCard
-            curso={item}
-            onVerDetalhes={() => navigation.navigate('Detalhes', { curso: item })}
-          />
-        )}
-      />
-    </View>
+    <FlatList
+      data={produtos}
+      keyExtractor={(item) => item.id.toString()}
+      contentContainerStyle={styles.lista}
+      renderItem={({ item }) => (
+        <ProdutoCard
+          item={item}
+          onPress={() => navigation.navigate('DetalhesProduto', { produto: item })}
+        />
+      )}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  tela: {
-    flex: 1,
-    backgroundColor: '#F8FAFC',
-  },
   lista: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+    padding: 16,
+  },
+  estado: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  erro: {
+    color: '#B91C1C',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
